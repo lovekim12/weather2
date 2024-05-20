@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Create .env file
+        run: |
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "ANOTHER_SECRET=${{ secrets.ANOTHER_SECRET }}" >> .env
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy
+        run: |
+          # 배포 스크립트나 명령어를 여기에 추가합니다
+          echo "Deploying application..."
+          # 예를 들어, 빌드된 파일을 서버에 복사하는 명령어
+          scp -r build/ user@yourserver.com:/path/to/deploy
+
